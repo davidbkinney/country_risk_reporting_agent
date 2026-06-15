@@ -14,6 +14,6 @@ The agent has access to a suite of tools that it can use to produce its report:
 2. A tool that allows it to view the Wikipedia summary for a given country.
 3. A tool that allows it to view WDI mortality data for a given country and year.
 4. A set of tools that allows it to view 50 randomly-selected survey responses from the world risk poll for a particular set of countries, years, and set of fields contained within those data sets.
-5. A tool that allows it to obtain a quantitative measure of the extent to which people worry harms versus actually experiencing them in a given country and year, as obtained via the world risk poll.
+5. A tool that allows it to obtain a quantitative measure of the extent to which people worry about harms versus the extent to which they actually experience them in a given country and year, as obtained via the world risk poll.
 
 Data is downloaded from a HuggingFace repository when the package is loaded. 
