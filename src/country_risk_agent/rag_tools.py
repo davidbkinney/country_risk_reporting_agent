@@ -43,7 +43,7 @@ def get_worry_experience_gap(country: str, year: str):
 
     path = hf_hub_download(
     repo_id="davidbkinney/country-risk-data",
-    filename="data_{year}.json",
+    filename=f"data_{year}.json",
     repo_type="dataset"
     )
 
@@ -193,7 +193,7 @@ def database_query_2019(countries:list[str], fields:list[str],
     """
     path = hf_hub_download(
     repo_id="davidbkinney/country-risk-data",
-    filename="data_{year}.json",
+    filename=f"data_{year}.json",
     repo_type="dataset"
     )
                             
