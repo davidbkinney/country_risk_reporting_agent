@@ -1,7 +1,18 @@
+"""
+report_agent.py 
+
+Implements the report-generating agent.
+"""
+
 from . import rag_tools, prompts
 import os
 from langchain.agents import create_agent
 from langchain_google_genai import ChatGoogleGenerativeAI
+
+# -----------------------------------------------------
+# Agent Initialization
+# -----------------------------------------------------
+
 
 _GOOGLE_API_KEY = None
 
@@ -12,9 +23,10 @@ def set_google_key(key: str):
 def _get_google_key():
     return _GOOGLE_API_KEY or os.getenv("GOOGLE_API_KEY")
 
-
-
 def build_agent():
+    """
+    Uses API key to create the agent
+    """
     api_key = _get_google_key()
 
     if not api_key:
@@ -48,17 +60,31 @@ def build_agent():
         system_prompt=prompts.SYSTEM_PROMPT
     )
 
-
+# -----------------------------------------------------
+# Agent
+# -----------------------------------------------------
 
 def generate_report(prompt: str) -> str:
-    agent = build_agent()
+    """
+    Generates a 1-2 page report answering the users question.
 
+    Args:
+        prompt: the user prompt.
+
+    Returns:
+        1-2 page report, grounded in data, answering the user's question.
+    """
+
+    # Initialize the agent
+    agent = build_agent()
     inputs = {
         "messages": [{"role": "user", "content": prompt}]
     }
 
+    # Initialize final output text
     final_text = ""
 
+    # Stream agent tool calls.
     for chunk in agent.stream(inputs, stream_mode="updates"):
         for node_name, node_update in chunk.items():
 
