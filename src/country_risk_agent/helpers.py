@@ -17,3 +17,8 @@ def clean_nan(val):
     elif isinstance(val, float) and val != val:  # Fast NaN check
         return None
     return val
+
+def load_json(filename):
+    path = Path(DATA_DIR) / filename
+    with open(path, "r") as f:
+        return json.load(f)
