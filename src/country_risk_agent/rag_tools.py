@@ -12,6 +12,12 @@ DATA_DIR = snapshot_download(
     repo_type="dataset"
 )
 
+DATA = {
+    2019: helpers.load_json("data_2019.json"),
+    2021: helpers.load_json("data_2021.json"),
+    2023: helpers.load_json("data_2023.json"),
+}
+
 embeddings = GoogleGenerativeAIEmbeddings(
     model="gemini-embedding-2-preview"
     )
@@ -46,10 +52,7 @@ def get_worry_experience_gap(country: str, year: str):
     if year not in ['2019', '2021', '2023']:
         return "Year must be one of 2019, 2021, or 2023."
 
-    path = DATA_DIR + f"/data_{year}.json"
-
-    with open(path, 'r') as f:
-        data_2019 = json.load(f)
+    data = DATA['year']
 
     country_vals = [
     d['metadata']['quantitative_data'].get("Worry and experience gap")
@@ -192,10 +195,7 @@ def database_query_2019(countries:list[str], fields:list[str],
         A list of dictionaries with participant metadata from the relevant
         countries, plus their responses to the questions specified by the input fields.
     """
-    path = DATA_DIR + "/data_2019.json"
-
-    with open(path, 'r') as f:
-        data_2019 = json.load(f)
+    data_2019 = DATA['2019']
         
     country_filter = [
         d for d in data_2019
@@ -305,10 +305,7 @@ def database_query_2021(countries:list[str], fields:list[str],
         countries, plus their responses to the questions specified by the input fields.
     """
     
-    path = DATA_DIR + "/data_2021.json"
-
-    with open(path, 'r') as f:
-        data_2021 = json.load(f)
+    data_2021 = DATA['2021']
 
     country_filter = [
         d for d in data_2021
@@ -417,10 +414,7 @@ def database_query_2023(countries:list[str], fields:list[str],
         countries, plus their responses to the questions specified by the input fields.
     """
 
-    path = DATA_DIR + "/data_2023.json"
-
-    with open(path, 'r') as f:
-        data_2023 = json.load(f)
+    data_2023 = DATA['2023']
 
     country_filter = [
         d for d in data_2023
