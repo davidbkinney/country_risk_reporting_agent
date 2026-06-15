@@ -5,11 +5,11 @@ import json
 import pandas as pd
 import random
 import requests
+from huggingface_hub import hf_hub_download
 
 embeddings = GoogleGenerativeAIEmbeddings(
     model="gemini-embedding-2-preview"
     )
-
 
 # =====================================================
 # Worry/Experience Gap Tool
@@ -40,9 +40,15 @@ def get_worry_experience_gap(country: str, year: str):
     """
     if year not in ['2019', '2021', '2023']:
         return "Year must be one of 2019, 2021, or 2023."
-    
-    with open(f'data/_{year}/data_{year}.json', 'r') as f:
-        data = json.load(f)
+
+    path = hf_hub_download(
+    repo_id="davidbkinney/country-risk-data",
+    filename="data_{year}.json",
+    repo_type="dataset"
+    )
+
+    with open(path, 'r') as f:
+        data_2019 = json.load(f)
 
     country_vals = [
     d['metadata']['quantitative_data'].get("Worry and experience gap")
@@ -185,7 +191,13 @@ def database_query_2019(countries:list[str], fields:list[str],
         A list of dictionaries with participant metadata from the relevant
         countries, plus their responses to the questions specified by the input fields.
     """
-    with open('data/_2019/data_2019.json', 'r') as f:
+    path = hf_hub_download(
+    repo_id="davidbkinney/country-risk-data",
+    filename="data_{year}.json",
+    repo_type="dataset"
+    )
+                            
+    with open(path, 'r') as f:
         data_2019 = json.load(f)
 
     country_filter = [
@@ -295,7 +307,13 @@ def database_query_2021(countries:list[str], fields:list[str],
         A list of dictionaries with participant metadata from the relevant
         countries, plus their responses to the questions specified by the input fields.
     """
-    with open('data/_2021/data_2021.json', 'r') as f:
+    path = hf_hub_download(
+    repo_id="davidbkinney/country-risk-data",
+    filename="data_{year}.json",
+    repo_type="dataset"
+    )
+                            
+    with open(path, 'r') as f:
         data_2021 = json.load(f)
 
     country_filter = [
@@ -404,7 +422,14 @@ def database_query_2023(countries:list[str], fields:list[str],
         A list of dictionaries with participant metadata from the relevant
         countries, plus their responses to the questions specified by the input fields.
     """
-    with open('data/_2023/data_2023.json', 'r') as f:
+
+    path = hf_hub_download(
+    repo_id="davidbkinney/country-risk-data",
+    filename="data_2023.json",
+    repo_type="dataset"
+    )
+                            
+    with open(path, 'r') as f:
         data_2023 = json.load(f)
 
     country_filter = [
@@ -486,7 +511,11 @@ def get_mortality_data(country:str, year:str):
         A list of the k countries whose embeddings are closest to
         the embedding of the query.
     """
-    DATA_PATH = "data/wdi/wdi_mortality_data.csv"
+    path = hf_hub_download(
+    repo_id="davidbkinney/country-risk-data",
+    filename="wdi_mortality_data.csv",
+    repo_type="dataset"
+    )
 
     data = pd.read_csv(DATA_PATH)
 
