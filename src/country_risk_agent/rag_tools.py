@@ -462,7 +462,7 @@ def country_search_mortality(query:str, k:int):
     model="gemini-embedding-2-preview"
     )
     vectorstore = Chroma(
-    persist_directory="./data/vector_stores/wdi/wdi",
+    persist_directory="./src/vector_stores/wdi/wdi",
     embedding_function=embeddings
     )
 
