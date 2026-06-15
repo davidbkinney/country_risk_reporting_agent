@@ -1,12 +1,12 @@
-from . import helpers, rag_tools
+from . import helpers
 from langchain_chroma import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-import json
-import pandas as pd
 import random
 import requests
 
-_DATA = None
+embeddings = GoogleGenerativeAIEmbeddings(
+    model="gemini-embedding-2-preview"
+    )
 
 DATA = {
     '2019': helpers.load_json("data_2019.json"),
@@ -14,10 +14,6 @@ DATA = {
     '2023': helpers.load_json("data_2023.json"),
     'WID': helpers.load_csv("wdi_mortality_data.csv")
         }
-
-embeddings = GoogleGenerativeAIEmbeddings(
-    model="gemini-embedding-2-preview"
-    )
 
 # =====================================================
 # Worry/Experience Gap Tool
@@ -48,7 +44,7 @@ def get_worry_experience_gap(country: str, year: str):
     """
     if year not in ['2019', '2021', '2023']:
         return "Year must be one of 2019, 2021, or 2023."
-
+    
     data = DATA[year]
 
     country_vals = [
@@ -137,7 +133,7 @@ def country_search_2019(query:str, k:int):
     )
 
     vectorstore = Chroma(
-    persist_directory="./vector_stores/_2019/country_db_2019",
+    persist_directory="./src/vector_stores/_2019/country_db_2019",
     embedding_function=embeddings
     )
 
@@ -145,7 +141,6 @@ def country_search_2019(query:str, k:int):
     query,
     k=k
     )
-
     return results
 
 
@@ -165,7 +160,7 @@ def field_search_2019(query:str, k:int):
         the embedding of the query.
     """
     vectorstore = Chroma(
-    persist_directory="./vector_stores/_2019/column_db_2019",
+    persist_directory="./src/vector_stores/_2019/column_db_2019",
     embedding_function=embeddings
     )
 
@@ -193,7 +188,7 @@ def database_query_2019(countries:list[str], fields:list[str],
         countries, plus their responses to the questions specified by the input fields.
     """
     data_2019 = DATA['2019']
-        
+
     country_filter = [
         d for d in data_2019
         if d.get('metadata', {})
@@ -249,7 +244,7 @@ def country_search_2021(query:str, k:int):
     model="gemini-embedding-2-preview"
     )
     vectorstore = Chroma(
-    persist_directory="./vector_stores/_2021/country_db_2021",
+    persist_directory="./src/vector_stores/_2021/country_db_2021",
     embedding_function=embeddings
     )
 
@@ -274,7 +269,7 @@ def field_search_2021(query:str, k:int):
         the embedding of the query.
     """
     vectorstore = Chroma(
-    persist_directory="./vector_stores/_2021/column_db_2021",
+    persist_directory="./src/vector_stores/_2021/column_db_2021",
     embedding_function=embeddings
     )
 
@@ -303,7 +298,6 @@ def database_query_2021(countries:list[str], fields:list[str],
     """
     data_2021 = DATA['2021']
 
-    # --- filter safely ---
     country_filter = [
         d for d in data_2021
         if d.get('metadata', {})
@@ -311,49 +305,30 @@ def database_query_2021(countries:list[str], fields:list[str],
             .get('Country Name') in countries
     ]
 
-    if not country_filter:
-        return {
-            "n_matches": 0,
-            "records": []
-        }
+    random.seed(42)
 
-    # --- bounded sampling ---
-    sample_size = min(max_records, len(country_filter))
+    sample = random.sample(
+        country_filter,
+        k=min(max_records, len(country_filter))
+    )
 
-    sample = random.sample(country_filter, sample_size)
-
-    # --- compact output ---
-    records = []
+    results = []
 
     for c in sample:
-        meta = c.get('metadata', {})
-        demo = meta.get('demographics', {})
-        quant = meta.get('quantitative_data', {})
-        qual = c.get('qualitative_data', {})
-
-        record = {
-            "country": demo.get("Country Name"),
-            "year": "2021",
-            "quantitative": {
-                field: quant.get(field)
-                for field in quant.keys()
-                if field in fields
+        response_dict = {
+            "metadata": {
+                "demographics": c['metadata']['demographics'],
+                "quantitative_data": c['metadata']['quantitative_data']
             },
-            "qualitative": {
-                field: qual.get(field)
-                for field in fields
-                if field in qual
-            }
+            "qualitative_data": {}
         }
+        for field in fields:
+            response_dict['qualitative_data'][field] = (
+                c.get('qualitative_data', {}).get(field)
+            )
+        results.append(response_dict)
 
-        records.append(record)
-
-    return {
-        "n_matches": len(country_filter),
-        "returned": len(records),
-        "records": records
-    }
-    
+    return helpers.clean_nan(results)
 
 # =====================================================
 # 2023 Data Tools
@@ -377,7 +352,7 @@ def country_search_2023(query:str, k:int):
     model="gemini-embedding-2-preview"
     )
     vectorstore = Chroma(
-    persist_directory="./vector_stores/_2023/country_db_2023",
+    persist_directory="./src/vector_stores/_2023/country_db_2023",
     embedding_function=embeddings
     )
 
@@ -402,7 +377,7 @@ def field_search_2023(query:str, k:int):
         the embedding of the query.
     """
     vectorstore = Chroma(
-    persist_directory="./vector_stores/_2023/column_db_2023",
+    persist_directory="./src/vector_stores/_2023/column_db_2023",
     embedding_function=embeddings
     )
 
@@ -429,7 +404,6 @@ def database_query_2023(countries:list[str], fields:list[str],
         A list of dictionaries with participant metadata from the relevant
         countries, plus their responses to the questions specified by the input fields.
     """
-
     data_2023 = DATA['2023']
 
     country_filter = [
@@ -488,7 +462,7 @@ def country_search_mortality(query:str, k:int):
     model="gemini-embedding-2-preview"
     )
     vectorstore = Chroma(
-    persist_directory="./vector_stores/wdi/wdi",
+    persist_directory="./data/vector_stores/wdi/wdi",
     embedding_function=embeddings
     )
 
