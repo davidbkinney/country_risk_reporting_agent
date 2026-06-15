@@ -7,9 +7,10 @@ import random
 import requests
 
 DATA = {
-    2019: helpers.load_json("data_2019.json"),
-    2021: helpers.load_json("data_2021.json"),
-    2023: helpers.load_json("data_2023.json"),
+    '2019': helpers.load_json("data_2019.json"),
+    '2021': helpers.load_json("data_2021.json"),
+    '2023': helpers.load_json("data_2023.json"),
+    'WID': helpers.load_csv("wdi_mortality_data.csv")
 }
 
 embeddings = GoogleGenerativeAIEmbeddings(
@@ -46,7 +47,7 @@ def get_worry_experience_gap(country: str, year: str):
     if year not in ['2019', '2021', '2023']:
         return "Year must be one of 2019, 2021, or 2023."
 
-    data = DATA['year']
+    data = DATA[year]
 
     country_vals = [
     d['metadata']['quantitative_data'].get("Worry and experience gap")
@@ -489,9 +490,7 @@ def get_mortality_data(country:str, year:str):
         A list of the k countries whose embeddings are closest to
         the embedding of the query.
     """
-    path = DATA_DIR + "wdi_mortality_data.csv"
-
-    data = pd.read_csv(path)
+    data = DATA['WID']
 
     data = data.dropna()
 
