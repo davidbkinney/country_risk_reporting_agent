@@ -1,8 +1,18 @@
+"""
+database_creator_2019.py
+
+Clean the 2019 world risk poll data and save it as a
+.json file for retrieval.
+"""
+
 import pyreadstat
 import json
 from tqdm import tqdm
 import numpy as np
 
+# -------------------------------------------------
+# Classify fields
+# -------------------------------------------------
 
 SKIP_FIELDS_2019 = [
     'Country (by alpha)',
@@ -51,14 +61,18 @@ QUANT_FIELDS_2019 = [
     'Worry and experience gap',
 ]
 
-path = 'data/_2019/19_wrp.sav'
+# -------------------------------------------------
+# Read in datasets.
+# -------------------------------------------------
+
+path = 'data/_2019/19_wrp.sav' # Your directory may differ!
 
 df, meta = pyreadstat.read_sav(
     path,
     apply_value_formats=True
 )
 
-path2 = 'data/trended/trended_wrp.sav'
+path2 = 'data/trended/trended_wrp.sav' # Your directory may differ!
 
 df2, meta2 = pyreadstat.read_sav(
     path2,
@@ -66,8 +80,11 @@ df2, meta2 = pyreadstat.read_sav(
 )
 
 
-data_2019 = []
+# -------------------------------------------------
+# Clean data and save as JSON.
+# -------------------------------------------------
 
+data_2019 = []
 for index, row in tqdm(df.iterrows(), total=len(df)):
 
     person_dict = {
@@ -83,7 +100,7 @@ for index, row in tqdm(df.iterrows(), total=len(df)):
     seen = set()  # (label, value) pairs
 
     # =====================================================
-    # DF
+    # Pull from 19_wrp.save
     # =====================================================
 
     json_data = json.loads(row.to_json())
@@ -115,7 +132,7 @@ for index, row in tqdm(df.iterrows(), total=len(df)):
 
 
     # =====================================================
-    # DF2
+    # Pull additional fields from trended_wrp.sav
     # =====================================================
 
     trended_data = df2[df2['WPID_RANDOM'] == row['WPID_RANDOM']]
