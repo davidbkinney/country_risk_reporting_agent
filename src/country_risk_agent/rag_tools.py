@@ -5,12 +5,6 @@ import json
 import pandas as pd
 import random
 import requests
-from huggingface_hub import snapshot_download
-
-DATA_DIR = snapshot_download(
-    repo_id="davidbkinney/country-risk-data",
-    repo_type="dataset"
-)
 
 DATA = {
     2019: helpers.load_json("data_2019.json"),
