@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "country-risk-reporting-agent"
+version = "0.1.0"
+description = "An agent that produces on the the perception and experience of risk in different countries."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+  { name = "David Kinney", email = "davidbkinney@gmail.com" }
+]
+
+dependencies = [
+    "numpy",
+    "pandas",
+    "requests",
+    "langchain",
+    "langchain-chroma",
+    "langchain-google-genai",
+    "chromadb"
+]
+
+requires-python = ">=3.9"
+
+[project.urls]
+Homepage = "https://github.com/davidbkinney/country_risk_reporting_agent"
+
+[tool.setuptools.packages.find]
+where = ["src"]

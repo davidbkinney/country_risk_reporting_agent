@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+dist/
+build/
+*.egg-info/
+.ipynb_checkpoints/
+src/data/_2019/
+src/data/_2021/
+src/data/_2023/
+src/data/trended/
+src/data/wdi/
