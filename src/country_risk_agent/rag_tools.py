@@ -46,7 +46,7 @@ def get_worry_experience_gap(country: str, year: str):
     if year not in ['2019', '2021', '2023']:
         return "Year must be one of 2019, 2021, or 2023."
 
-    data = load_json(DATA_DIR + f"/data_{year}.json")
+    data = helpers.load_json(DATA_DIR + f"/data_{year}.json")
 
     country_vals = [
     d['metadata']['quantitative_data'].get("Worry and experience gap")
@@ -189,7 +189,7 @@ def database_query_2019(countries:list[str], fields:list[str],
         A list of dictionaries with participant metadata from the relevant
         countries, plus their responses to the questions specified by the input fields.
     """
-    data_2019 = load_json(DATA_DIR + "/data_2019.json")
+    data_2019 = helpers.load_json(DATA_DIR + "/data_2019.json")
 
     country_filter = [
         d for d in data_2019
@@ -299,7 +299,7 @@ def database_query_2021(countries:list[str], fields:list[str],
         countries, plus their responses to the questions specified by the input fields.
     """
     
-    data_2021 = load_json(DATA_DIR + "/data_2021.json")
+    data_2021 = helpers.load_json(DATA_DIR + "/data_2021.json")
 
     country_filter = [
         d for d in data_2021
@@ -408,7 +408,7 @@ def database_query_2023(countries:list[str], fields:list[str],
         countries, plus their responses to the questions specified by the input fields.
     """
 
-    data_2023 = load_json(DATA_DIR + "/data_2023.json")
+    data_2023 = helpers.load_json(DATA_DIR + "/data_2023.json")
 
     country_filter = [
         d for d in data_2023
