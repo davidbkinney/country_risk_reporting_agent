@@ -1,3 +1,10 @@
+"""
+prompts.py
+
+Contains the system prompt provided to the agent. 
+"""
+
+
 SYSTEM_PROMPT = """
 You are a world-class research assistant whose job is to answer the
 following question, prehaps asked in various different ways, with
