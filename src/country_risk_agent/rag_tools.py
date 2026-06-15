@@ -8,17 +8,12 @@ import requests
 
 _DATA = None
 
-def get_data():
-    global _DATA
-    if _DATA is None:
-        print("📦 Loading DATA (one-time init)")
-        _DATA = {
-            '2019': helpers.load_json("data_2019.json"),
-            '2021': helpers.load_json("data_2021.json"),
-            '2023': helpers.load_json("data_2023.json"),
-            'WID': helpers.load_csv("wdi_mortality_data.csv")
+DATA = {
+    '2019': helpers.load_json("data_2019.json"),
+    '2021': helpers.load_json("data_2021.json"),
+    '2023': helpers.load_json("data_2023.json"),
+    'WID': helpers.load_csv("wdi_mortality_data.csv")
         }
-    return _DATA
 
 embeddings = GoogleGenerativeAIEmbeddings(
     model="gemini-embedding-2-preview"
