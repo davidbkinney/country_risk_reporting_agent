@@ -1,13 +1,21 @@
+"""
+rag_tools.py 
+
+Repository of RAG tools available to the agent.
+"""
+
 from . import helpers
 from langchain_chroma import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 import random
 import requests
 
+# Define embedding model.
 embeddings = GoogleGenerativeAIEmbeddings(
     model="gemini-embedding-2-preview"
     )
 
+# Read data into the user's environment.
 DATA = {
     '2019': helpers.load_json("data_2019.json"),
     '2021': helpers.load_json("data_2021.json"),
@@ -187,8 +195,12 @@ def database_query_2019(countries:list[str], fields:list[str],
         A list of dictionaries with participant metadata from the relevant
         countries, plus their responses to the questions specified by the input fields.
     """
+
+    # Obtain 2019 data
     data_2019 = DATA['2019']
 
+
+    # Filter for input countries.
     country_filter = [
         d for d in data_2019
         if d.get('metadata', {})
@@ -197,15 +209,16 @@ def database_query_2019(countries:list[str], fields:list[str],
     ]
     
     
-    random.seed(42)
+    random.seed(42) # Set for reproducibility.
 
+    # Randomly sample 50 rows to pull data from.
     sample = random.sample(
         country_filter,
         k=min(max_records, len(country_filter))
     )
 
+    # Restrict sampled rows to selected qualitative fields.
     results = []
-
     for c in sample:
         response_dict = {
             "metadata": {
@@ -296,8 +309,11 @@ def database_query_2021(countries:list[str], fields:list[str],
         A list of dictionaries with participant metadata from the relevant
         countries, plus their responses to the questions specified by the input fields.
     """
+
+    # Obtain 2019 data.
     data_2021 = DATA['2021']
 
+    # Filter for input countries.
     country_filter = [
         d for d in data_2021
         if d.get('metadata', {})
@@ -305,15 +321,16 @@ def database_query_2021(countries:list[str], fields:list[str],
             .get('Country Name') in countries
     ]
 
-    random.seed(42)
+    random.seed(42) # Set for reproducibility.
 
+    # Randomly sample 50 rows from selected countries.
     sample = random.sample(
         country_filter,
         k=min(max_records, len(country_filter))
     )
 
+    # Restrict sampled rows to selected qualitative fields.        
     results = []
-
     for c in sample:
         response_dict = {
             "metadata": {
@@ -404,8 +421,11 @@ def database_query_2023(countries:list[str], fields:list[str],
         A list of dictionaries with participant metadata from the relevant
         countries, plus their responses to the questions specified by the input fields.
     """
+
+    # Obtain 2023 data.
     data_2023 = DATA['2023']
 
+    # Filter for inputted countries. 
     country_filter = [
         d for d in data_2023
         if d.get('metadata', {})
@@ -413,15 +433,16 @@ def database_query_2023(countries:list[str], fields:list[str],
             .get('Country Name') in countries
     ]
 
-    random.seed(42)
+    random.seed(42) # Set for reproducibility
 
+    # Randomly sample 50 rows from inputted countries.
     sample = random.sample(
         country_filter,
         k=min(max_records, len(country_filter))
     )
 
+    # Restrict sampled rows to selected qualitative fields.
     results = []
-
     for c in sample:
         response_dict = {
             "metadata": {
