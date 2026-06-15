@@ -1,11 +1,22 @@
 import numpy as np
+import pandas as pd
 import json
 from pathlib import Path
+from huggingface_hub import snapshot_download
+
+DATA_DIR = snapshot_download(
+    repo_id="davidbkinney/country-risk-data",
+    repo_type="dataset"
+)
 
 def load_json(filename):
     path = Path(DATA_DIR) / filename
     with open(path, "r") as f:
         return json.load(f)
+
+def load_csv(filename):
+    path = Path(DATA_DIR) / filename
+    return pd.read_csv(path)
 
 def safe_mean(x):
     x = [v for v in x if v is not None and np.isfinite(v)]
