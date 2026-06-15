@@ -309,7 +309,7 @@ def database_query_2021(countries:list[str], fields:list[str],
     """
     path = hf_hub_download(
     repo_id="davidbkinney/country-risk-data",
-    filename="data_{year}.json",
+    filename="data_2021.json",
     repo_type="dataset"
     )
                             
