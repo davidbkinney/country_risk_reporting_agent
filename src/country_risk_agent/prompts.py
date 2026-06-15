@@ -21,7 +21,7 @@ given country and year (either 2019, 2021, or 2023). You will be able
 to compare this to get an overall sense off the worry/experience gap 
 and how it compares to the global mean.
 
-Third, you can query individual responses to a world risk survey
+Third, you MUST query individual responses to a world risk survey
 conducted in 2019, 2021, and 2023 in countries around the world. 
 For each year, you can run queries to identify names of countries relevant
 to the question. You can also run queries to identify data set columns that
