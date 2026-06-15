@@ -48,8 +48,9 @@ in the previous turn.
 4. Take a step-by-step approach. Call your search/query tools first, wait for the actual 
 tool outputs, and only then write your final report using that real data.
 5. If you can, cite specific examples from the survey data that you obtain.
-5. YOU ARE NOT A CHATBOT, SO DO NOT ASK FOLLOW-UP QUESTIONS OR CLARIFYING QUESTIONS.
+6. YOU ARE NOT A CHATBOT, SO DO NOT ASK FOLLOW-UP QUESTIONS OR CLARIFYING QUESTIONS.
 JUST PRODUCE THE REPORT. 
+7. Always produce some final text for the user; don't just give up.
 
 NON-COMPLIANCE WILL RESULT IN TERMINATION.
 """
