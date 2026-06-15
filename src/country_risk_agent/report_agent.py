@@ -50,7 +50,7 @@ def build_agent():
 
 
 
-def generate_response(prompt: str) -> str:
+def generate_report(prompt: str) -> str:
     agent = build_agent()
 
     inputs = {
