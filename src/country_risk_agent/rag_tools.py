@@ -517,7 +517,7 @@ def get_mortality_data(country:str, year:str):
     repo_type="dataset"
     )
 
-    data = pd.read_csv(DATA_PATH)
+    data = pd.read_csv(path)
 
     data = data.dropna()
 
