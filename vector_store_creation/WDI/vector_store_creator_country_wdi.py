@@ -1,3 +1,11 @@
+"""
+vector_store_creator_country_wdi.py
+
+Creates a vector store containing embeddings of the country
+names in the world development index data set.
+"""
+
+
 import pandas as pd
 from langchain_core.documents import Document
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -32,7 +40,6 @@ print(f"Loaded {len(data):,} rows")
 # =====================================================
 # GET UNIQUE COUNTRIES
 # =====================================================
-
 
 unique_countries = data['Country Name'].unique()
 
