@@ -1,9 +1,19 @@
+"""
+database_creator_2023.py
+
+Clean the 2023 world risk poll data and save it as a
+.json file for retrieval.
+"""
+
 import pyreadstat
 import json
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
 
+# -------------------------------------------------
+# Classify fields
+# -------------------------------------------------
 
 SKIP_FIELDS_2023 = [
     'Country (by alpha)',
@@ -57,6 +67,10 @@ QUANT_FIELDS_2023 = [
     'Resilience: Society Dimension'
 ]
 
+# -------------------------------------------------
+# Read in datasets.
+# -------------------------------------------------
+
 path = 'data/_2023/23_wrp.sav'
 
 df, meta = pyreadstat.read_sav(
@@ -70,6 +84,10 @@ df2, meta2 = pyreadstat.read_sav(
     path2,
     apply_value_formats=True
 )
+
+# -------------------------------------------------
+# Clean data and save as JSON.
+# -------------------------------------------------
 
 data_2023 = []
 
@@ -88,7 +106,7 @@ for index, row in tqdm(df.iterrows(), total=len(df)):
     seen = set()  # (label, value) pairs
 
     # =====================================================
-    # DF
+    # Pull from 23_wrp.sav
     # =====================================================
 
     json_data = json.loads(row.to_json())
@@ -120,7 +138,7 @@ for index, row in tqdm(df.iterrows(), total=len(df)):
 
 
     # =====================================================
-    # DF2
+    # Pull additional fields from trended_wrp.sav
     # =====================================================
 
     trended_data = df2[df2['WPID_RANDOM'] == row['WPID_RANDOM']]
@@ -156,7 +174,7 @@ for index, row in tqdm(df.iterrows(), total=len(df)):
 
     data_2023.append(person_dict)
 
-
+# Calculate and add Worry and Experience gap values.
 for d in tqdm(data_2023):
     worry = d['metadata']['quantitative_data'].get('Worried Index')
     experienced = d['metadata']['quantitative_data'].get('Experienced Index')
