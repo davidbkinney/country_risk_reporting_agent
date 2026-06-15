@@ -6,12 +6,19 @@ import pandas as pd
 import random
 import requests
 
-DATA = {
-    '2019': helpers.load_json("data_2019.json"),
-    '2021': helpers.load_json("data_2021.json"),
-    '2023': helpers.load_json("data_2023.json"),
-    'WID': helpers.load_csv("wdi_mortality_data.csv")
-}
+_DATA = None
+
+def get_data():
+    global _DATA
+    if _DATA is None:
+        print("📦 Loading DATA (one-time init)")
+        _DATA = {
+            '2019': helpers.load_json("data_2019.json"),
+            '2021': helpers.load_json("data_2021.json"),
+            '2023': helpers.load_json("data_2023.json"),
+            'WID': helpers.load_csv("wdi_mortality_data.csv")
+        }
+    return _DATA
 
 embeddings = GoogleGenerativeAIEmbeddings(
     model="gemini-embedding-2-preview"
@@ -299,9 +306,9 @@ def database_query_2021(countries:list[str], fields:list[str],
         A list of dictionaries with participant metadata from the relevant
         countries, plus their responses to the questions specified by the input fields.
     """
-    
     data_2021 = DATA['2021']
 
+    # --- filter safely ---
     country_filter = [
         d for d in data_2021
         if d.get('metadata', {})
@@ -309,30 +316,49 @@ def database_query_2021(countries:list[str], fields:list[str],
             .get('Country Name') in countries
     ]
 
-    random.seed(42)
+    if not country_filter:
+        return {
+            "n_matches": 0,
+            "records": []
+        }
 
-    sample = random.sample(
-        country_filter,
-        k=min(max_records, len(country_filter))
-    )
+    # --- bounded sampling ---
+    sample_size = min(max_records, len(country_filter))
 
-    results = []
+    sample = random.sample(country_filter, sample_size)
+
+    # --- compact output ---
+    records = []
 
     for c in sample:
-        response_dict = {
-            "metadata": {
-                "demographics": c['metadata']['demographics'],
-                "quantitative_data": c['metadata']['quantitative_data']
-            },
-            "qualitative_data": {}
-        }
-        for field in fields:
-            response_dict['qualitative_data'][field] = (
-                c.get('qualitative_data', {}).get(field)
-            )
-        results.append(response_dict)
+        meta = c.get('metadata', {})
+        demo = meta.get('demographics', {})
+        quant = meta.get('quantitative_data', {})
+        qual = c.get('qualitative_data', {})
 
-    return helpers.clean_nan(results)
+        record = {
+            "country": demo.get("Country Name"),
+            "year": "2021",
+            "quantitative": {
+                field: quant.get(field)
+                for field in quant.keys()
+                if field in fields
+            },
+            "qualitative": {
+                field: qual.get(field)
+                for field in fields
+                if field in qual
+            }
+        }
+
+        records.append(record)
+
+    return {
+        "n_matches": len(country_filter),
+        "returned": len(records),
+        "records": records
+    }
+    
 
 # =====================================================
 # 2023 Data Tools
