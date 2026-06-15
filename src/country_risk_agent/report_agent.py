@@ -61,26 +61,36 @@ def generate_report(prompt: str) -> str:
 
     for chunk in agent.stream(inputs, stream_mode="updates"):
         for node_name, node_update in chunk.items():
-            if "messages" in node_update:
-                for msg in node_update["messages"]:
 
-                    if msg.type == "ai":
-                        content = msg.content
-                        if isinstance(content, list):
-                            first = content[0]
-                            text = first["text"] if isinstance(first, dict) and "text" in first else str(first)
-                        else:
-                            text = content
+            if "messages" not in node_update:
+                continue
 
-                        if text.strip():
-                            print(f"\n💬 [Agent]: {text}")
-                            final_text = text
+            for msg in node_update["messages"]:
 
-                        if getattr(msg, "tool_calls", None):
-                            for tool_call in msg.tool_calls:
-                                print(f"🔄 [Agent] Tool: '{tool_call['name']}'")
+                # Agent decides to call a tool
+                if getattr(msg, "tool_calls", None):
+                    for tool_call in msg.tool_calls:
+                        print(f"🔄 [Agent] Tool: '{tool_call['name']}'")
 
-                    elif msg.type == "tool":
-                        print(f"✅ [Tool] '{msg.name}' done.")
+                # Tool completed
+                elif msg.type == "tool":
+                    print(f"✅ [Tool] '{msg.name}' done.")
+
+                # Save final AI response, but don't print it
+                elif msg.type == "ai":
+                    content = msg.content
+
+                    if isinstance(content, list):
+                        text_parts = [
+                            item.get("text", "")
+                            for item in content
+                            if isinstance(item, dict)
+                        ]
+                        text = "\n".join(text_parts)
+                    else:
+                        text = str(content)
+
+                    if text.strip():
+                        final_text = text
 
     return final_text
