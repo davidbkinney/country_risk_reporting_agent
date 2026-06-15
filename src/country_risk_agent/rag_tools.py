@@ -48,7 +48,7 @@ def get_worry_experience_gap(country: str, year: str):
     )
 
     with open(path, 'r') as f:
-        data_2019 = json.load(f)
+        data = json.load(f)
 
     country_vals = [
     d['metadata']['quantitative_data'].get("Worry and experience gap")
