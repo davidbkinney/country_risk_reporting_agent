@@ -1,4 +1,4 @@
-# Perceived vs. Measured Saftey Across Countries: A Report Generating Agent
+# Perceived vs. Measured Safety Across Countries: A Report Generating Agent
 
 **N.B: This is an early-stage, partially-completed project.**
 
