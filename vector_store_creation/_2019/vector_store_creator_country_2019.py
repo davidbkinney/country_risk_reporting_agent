@@ -1,5 +1,5 @@
 """
-vector_store_creator_country_wdi.py
+vector_store_creator_country_2019.py
 
 Creates a vector store containing embeddings of the country
 names in the 2019 Gallup World Risk Poll survey.
