@@ -1,5 +1,7 @@
 # Perceived vs. Measured Saftey Across Countries: A Report Generating Agent
 
+**N.B: This is an early-stage, partially-completed project.**
+
 This repopsitory contains Python package implementing a custom AI agent designed to produce 1-2 page reports on perceived versus measured safety in different countries. It can take as input user prompts that ask for this information in different ways. It grounds its answers in three different data sources:
 
 1. Wikipedia country summaries, accessed via the wikipedia API.
