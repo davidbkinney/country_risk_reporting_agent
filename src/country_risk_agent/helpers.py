@@ -1,4 +1,11 @@
 import numpy as np
+import json
+from pathlib import Path
+
+def load_json(filename):
+    path = Path(DATA_DIR) / filename
+    with open(path, "r") as f:
+        return json.load(f)
 
 def safe_mean(x):
     x = [v for v in x if v is not None and np.isfinite(v)]
@@ -18,7 +25,4 @@ def clean_nan(val):
         return None
     return val
 
-def load_json(filename):
-    path = Path(DATA_DIR) / filename
-    with open(path, "r") as f:
-        return json.load(f)
+
