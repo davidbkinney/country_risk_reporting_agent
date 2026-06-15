@@ -1,9 +1,19 @@
+"""
+database_creator_2021.py
+
+Clean the 2021 world risk poll data and save it as a
+.json file for retrieval.
+"""
+
 import pandas as pd
 import pyreadstat
 import json
 from tqdm import tqdm
 import numpy as np
 
+# -------------------------------------------------
+# Classify fields
+# -------------------------------------------------
 
 SKIP_FIELDS_2021 = [
     'Country (by alpha)',
@@ -51,25 +61,36 @@ QUANT_FIELDS_2021 = ["Resilience Index 0 - 1 scale",
     "Resilience: Society Dimension 0 - 100 scale",
     "Resilience Index 0 - 100 scale"]
 
-path = 'data/_2021/21_wrp.sav'
+
+# -------------------------------------------------
+# Read in datasets.
+# -------------------------------------------------
+
+path = 'data/_2021/21_wrp.sav' # Your directory may differ!
 
 df, meta = pyreadstat.read_sav(
     path,
     apply_value_formats=True
 )
 
-path2 = 'data/trended/trended_wrp.sav'
+path2 = 'data/trended/trended_wrp.sav' # Your directory may differ!
 
 df2, meta2 = pyreadstat.read_sav(
     path2,
     apply_value_formats=True
 )
 
+# Pull worry-experience gap data from 21_23_trended_worry_experience.csv
+
 quant_df = pd.read_csv('data/_2021/21_23_trended_worry_experience.csv')
 quant_df['Q4_RMw_maxmin'] = pd.to_numeric(quant_df['Q4_RMw_maxmin'], errors='coerce')
 quant_df['Q5_RMw_maxmin'] = pd.to_numeric(quant_df['Q5_RMw_maxmin'], errors='coerce')
 
 quant_lookup = quant_df.set_index('WPID_RANDOM')[['Q4_RMw_maxmin', 'Q5_RMw_maxmin']]
+
+# -------------------------------------------------
+# Clean data and save as JSON.
+# -------------------------------------------------
 
 data_2021 = []
 
@@ -103,7 +124,7 @@ for index, row in tqdm(df.iterrows(), total=len(df)):
     seen = set()  # (label, value) pairs
 
     # =====================================================
-    # DF
+    # Pull from 19_wrp.sav
     # =====================================================
 
     json_data = json.loads(row.to_json())
@@ -135,7 +156,7 @@ for index, row in tqdm(df.iterrows(), total=len(df)):
 
 
     # =====================================================
-    # DF2
+    # Pull additional fields from trended_wrp.sav
     # =====================================================
 
     trended_data = df2[df2['WPID_RANDOM'] == row['WPID_RANDOM']]
