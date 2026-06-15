@@ -1,3 +1,10 @@
+"""
+vector_store_creator_column_2021.py
+
+Creates a vector store containing embeddings of the field
+names in the 2021 Gallup World Risk Poll survey.
+"""
+
 from langchain_core.documents import Document
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_chroma import Chroma
