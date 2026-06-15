@@ -46,7 +46,10 @@ def get_worry_experience_gap(country: str, year: str):
     if year not in ['2019', '2021', '2023']:
         return "Year must be one of 2019, 2021, or 2023."
 
-    data = helpers.load_json(DATA_DIR + f"/data_{year}.json")
+    path = DATA_DIR + f"/data_{year}.json"
+
+    with open(path, 'r') as f:
+        data_2019 = json.load(f)
 
     country_vals = [
     d['metadata']['quantitative_data'].get("Worry and experience gap")
@@ -189,8 +192,11 @@ def database_query_2019(countries:list[str], fields:list[str],
         A list of dictionaries with participant metadata from the relevant
         countries, plus their responses to the questions specified by the input fields.
     """
-    data_2019 = helpers.load_json(DATA_DIR + "/data_2019.json")
+    path = DATA_DIR + "/data_2019.json"
 
+    with open(path, 'r') as f:
+        data_2019 = json.load(f)
+        
     country_filter = [
         d for d in data_2019
         if d.get('metadata', {})
@@ -299,7 +305,10 @@ def database_query_2021(countries:list[str], fields:list[str],
         countries, plus their responses to the questions specified by the input fields.
     """
     
-    data_2021 = helpers.load_json(DATA_DIR + "/data_2021.json")
+    path = DATA_DIR + "/data_2021.json"
+
+    with open(path, 'r') as f:
+        data_2021 = json.load(f)
 
     country_filter = [
         d for d in data_2021
@@ -408,7 +417,10 @@ def database_query_2023(countries:list[str], fields:list[str],
         countries, plus their responses to the questions specified by the input fields.
     """
 
-    data_2023 = helpers.load_json(DATA_DIR + "/data_2023.json")
+    path = DATA_DIR + "/data_2023.json"
+
+    with open(path, 'r') as f:
+        data_2023 = json.load(f)
 
     country_filter = [
         d for d in data_2023
@@ -489,7 +501,9 @@ def get_mortality_data(country:str, year:str):
         A list of the k countries whose embeddings are closest to
         the embedding of the query.
     """
-    data = pd.read_csv(DATA_DIR + "wdi_mortality_data.csv")
+    path = DATA_DIR + "wdi_mortality_data.csv"
+
+    data = pd.read_csv(path)
 
     data = data.dropna()
 
