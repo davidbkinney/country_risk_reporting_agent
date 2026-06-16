@@ -71,14 +71,14 @@ QUANT_FIELDS_2023 = [
 # Read in datasets.
 # -------------------------------------------------
 
-path = 'data/_2023/23_wrp.sav'
+path = 'data/_2023/23_wrp.sav' # Your directory may differ!
 
 df, meta = pyreadstat.read_sav(
     path,
     apply_value_formats=True
 )
 
-path2 = 'data/trended/trended_wrp.sav'
+path2 = 'data/trended/trended_wrp.sav' # Your directory may differ!
 
 df2, meta2 = pyreadstat.read_sav(
     path2,
