@@ -2,7 +2,7 @@
 
 **N.B: This is an early-stage, partially-completed project.**
 
-This repopsitory contains Python package implementing a custom AI agent designed to produce 1-2 page reports on perceived versus measured safety in different countries. It can take as input user prompts that ask for this information in different ways. It grounds its answers in three different data sources:
+This repository contains Python package implementing a custom AI agent designed to produce 1-2 page reports on perceived versus measured safety in different countries. It can take as input user prompts that ask for this information in different ways. It grounds its answers in three different data sources:
 
 1. Wikipedia country summaries, accessed via the wikipedia API.
 2. World Development Index (WDI) data from 266 countries that includes 22 different mortality-related fields, collected in the years 2019, 2021, and 2023.
